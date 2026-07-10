@@ -1,37 +1,82 @@
-# 品牌 Logo 与用法
+# 品牌设计规范
 
 > **类型：`INVARIANT`（必须遵守）** · 适用范围：MintPop 品牌下所有产品
 >
-> 品牌名写法、Logo、域名规则跨产品一致，保证用户在不同产品间认得出这是同一个品牌。
+> Slogan：**Pop into something fresh.** 品牌名、标记、配色、字体跨产品一致，保证用户在不同产品间认得出这是同一个品牌。
+
+<img src="/assets/brand/brand-board.png" alt="MintPop 品牌总览板" style="width:100%;border-radius:12px;border:1px solid var(--vp-c-divider);margin:8px 0 4px" />
 
 ## 一、品牌名写法（INVARIANT）
 
-- 正确写法：**MintPop**（M、P 大写，连写，无空格）。
+- 正文写法：**MintPop**（M、P 大写，连写，无空格）。
+- 词标（logo）里为全小写 `mintpop`——那是 Logo 字形，不代表正文写法。
 - ❌ 错误：`Mintpop` / `mint pop` / `MINTPOP`（正文里）/ `Mint-Pop`。
 - 产品命名：`MintPop <ProductName>`（如 `MintPop Keeper`）；口语可简称产品名。
 
-## 二、品牌级 Logo 资源（直接拉取）
+## 二、核心标记 · The Pop Mark（INVARIANT）
 
-品牌级 Logo 放在本站 `assets/brand/`，各产品**直接引用同一份**，不要自己重画：
+词标中 `pop` 的字母 **o** 就是品牌标记：**绿色半色调圆盘 + 上下爆裂短线**（halftone fade · burst rays）。
 
-| 用途 | 路径 |
-|---|---|
-| 主 Logo（SVG，浅底用） | `/assets/brand/logo.svg` |
-| 反白 Logo（深色底用） | `/assets/brand/logo-inverse.svg` |
-| 纯图标 / favicon | `/assets/brand/mark.svg` |
+<img src="/assets/brand/icon/mintpop-icon-256.png" alt="MintPop Pop Mark" width="96" style="background:var(--vp-c-bg-soft);padding:12px;border-radius:12px" />
 
-> 例：`https://<你的域名>/assets/brand/logo.svg`。当前为占位，把正式素材放进仓库 `docs/public/assets/brand/` 即生效。
->
-> 各**产品自己的** Logo / 素材放 `docs/public/assets/products/<产品>/`，见对应产品页。
+- 标记为**原图标像素级抠出**（透明底），**不得重绘或改动设计**。
+- 爆裂短线是**黑色**、专为浅背景设计；深色背景改用白字词标（见[下方](#四、logo-词标)）。
 
-## 三、使用规则（INVARIANT）
+## 三、配色（INVARIANT）
 
-- **留白**：Logo 四周留出不小于图标高度 1/2 的净空，不要贴边、不要被文字包围。
-- **不许改**：不拉伸变形、不换配色、不加描边/阴影、不旋转。
-- **最小尺寸**：图标最小 16px，横版 Logo 最小高度 20px。
-- **底色**：浅底用主 Logo，深底用反白版，保证对比度。
+<table>
+<thead><tr><th>色卡</th><th>名称</th><th>HEX</th><th>用途</th></tr></thead>
+<tbody>
+<tr><td><span style="display:inline-block;width:20px;height:20px;border-radius:4px;background:#17D1A7;vertical-align:middle;border:1px solid var(--vp-c-divider)"></span></td><td>Mint</td><td><code>#17D1A7</code></td><td>主色（取自图标实采样）</td></tr>
+<tr><td><span style="display:inline-block;width:20px;height:20px;border-radius:4px;background:#1FE3AD;vertical-align:middle;border:1px solid var(--vp-c-divider)"></span></td><td>Mint Bright</td><td><code>#1FE3AD</code></td><td>渐变高光端</td></tr>
+<tr><td><span style="display:inline-block;width:20px;height:20px;border-radius:4px;background:#0FB389;vertical-align:middle;border:1px solid var(--vp-c-divider)"></span></td><td>Mint Deep</td><td><code>#0FB389</code></td><td>渐变深色端</td></tr>
+<tr><td><span style="display:inline-block;width:20px;height:20px;border-radius:4px;background:#0B0B0C;vertical-align:middle;border:1px solid var(--vp-c-divider)"></span></td><td>Ink</td><td><code>#0B0B0C</code></td><td>文字 / 深色底</td></tr>
+<tr><td><span style="display:inline-block;width:20px;height:20px;border-radius:4px;background:#F4F8F6;vertical-align:middle;border:1px solid var(--vp-c-divider)"></span></td><td>Cloud</td><td><code>#F4F8F6</code></td><td>浅色底 / 浅色瓦片</td></tr>
+</tbody>
+</table>
 
-## 四、域名约定（INVARIANT）
+> 主色 `#17D1A7` 是[设计基线](/global/design-baseline)的默认 Brand 色；产品可换主色，但品牌标记/词标本身的绿不可改。
+
+## 四、字体（INVARIANT）
+
+| 字体 | 角色 | 字重 |
+|---|---|---|
+| **Fredoka** | 词标 / Logo / 展示大标题（圆润几何无衬线，与 logo 字形一致） | SemiBold |
+| **Inter** | UI 与正文 | Regular / Medium / SemiBold |
+
+- 一律**自托管**（走 [Fontsource](https://fontsource.org)：`@fontsource/fredoka`、`@fontsource/inter`），**禁止外链 Google Fonts**，保证含中国大陆在内全球可达。
+
+## 五、Logo · 词标（INVARIANT）
+
+按背景深浅选版本，**不要**把深字版硬放到深底上（反之亦然）：
+
+**浅背景 → 深字版** `mintpop-wordmark-dark`
+<div style="background:var(--vp-c-bg-soft);padding:24px;border-radius:12px;margin:8px 0"><img src="/assets/brand/wordmark/mintpop-wordmark-dark.png" alt="MintPop 词标（深字）" width="220" /></div>
+
+**深背景 → 白字版** `mintpop-wordmark-light`
+<div style="background:#0B0B0C;padding:24px;border-radius:12px;margin:8px 0"><img src="/assets/brand/wordmark/mintpop-wordmark-light.png" alt="MintPop 词标（白字）" width="220" /></div>
+
+## 六、资源下载（直接拉取）
+
+品牌级资源在本站 `assets/brand/`，各产品**引用同一份**，不要自己重画。例：`https://<域名>/assets/brand/wordmark/mintpop-wordmark-dark.png`。
+
+| 分类 | 文件 | 说明 |
+|---|---|---|
+| 词标 `wordmark/` | `mintpop-wordmark-dark.png` / `-light.png` | 深字（浅底）/ 白字（深底） |
+| 图标 `icon/` | `mintpop-icon.png`（原生 238×420）、`-square`（420×420 居中）、`-256/-128/-64` | 透明底，下采样档清晰 |
+| 应用图标 `app-icon/` | `mintpop-app-cloud` / `-white` / `avatar-round`（@512） | 浅灰底 / 白底 / 圆形头像 |
+| Favicon `favicon/` | `favicon-16/32/48/180/192/256.png`、`apple-touch-icon.png` | 网页图标全套 |
+| 总览板 | `brand-board.png` | 一图速览整套品牌系统 |
+
+## 七、使用规则（INVARIANT）
+
+- **不许改**：不拉伸变形、不换配色、不加描边/阴影、不旋转、不重绘标记。
+- **留白**：Logo 四周留出不小于图标高度 1/2 的净空，不贴边、不被文字包围。
+- **最小尺寸**：图标最小 16px，横版词标最小高度 20px。
+- **背景**：浅底用深字词标 / 原标记；深底用白字词标。
+- **分辨率**：标记「真身」约 208px，故 **favicon / 应用瓦片 / 网页用途都清晰**（均为下采样）。**1024 应用商店图标或大尺寸印刷需放大会糊**——唯一无损办法是把标记重绘成矢量（等于重画一遍），需要时再做。
+
+## 八、域名约定（INVARIANT）
 
 - 主域：`mintpop.ai`。
 - 产品站点用**子域**：`<product>.mintpop.ai`（如 `keeper.mintpop.ai`）。

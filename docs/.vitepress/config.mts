@@ -41,7 +41,10 @@ export default defineConfig({
   cleanUrls: true,
   lastUpdated: true,
 
+  head: [['link', { rel: 'icon', type: 'image/png', href: '/assets/brand/favicon/favicon-32.png' }]],
+
   themeConfig: {
+    logo: '/assets/brand/icon/mintpop-icon-square.png',
     nav: [
       { text: '首页', link: '/' },
       { text: '品牌总规范', link: '/global/' },

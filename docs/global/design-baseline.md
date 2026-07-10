@@ -6,24 +6,27 @@
 
 ## 一、配色（默认值，可覆盖）
 
-以品牌薄荷绿为主色，产品可换主色但保留「浅色克制、强调色点缀」的思路。
+默认取品牌 [Mint 配色](/global/brand#三、配色)为主色，产品可换主色但保留「浅色克制、强调色点缀」的思路。
 
 | 语义 | 默认值 | 说明 |
 |---|---|---|
-| 主色 Brand | `#3DDC97` | 品牌薄荷绿；产品可替换为自己的主色 |
-| 主色（深） | `#2BB47E` | hover / 按下态 |
-| 文本 | `#1A1A1A` | 正文 |
+| 主色 Brand | `#17D1A7`（Mint） | 品牌主色；产品可替换为自己的主色 |
+| 主色（深） | `#0FB389`（Mint Deep） | hover / 按下态 |
+| 文本 Ink | `#0B0B0C` | 正文 |
 | 次要文本 | `#6B7280` | 辅助信息 |
-| 背景 | `#FFFFFF` / `#F7F8FA` | 页面 / 卡片分层 |
+| 背景 | `#FFFFFF` / `#F4F8F6`（Cloud） | 页面 / 卡片分层 |
 | 分隔线 | `#E5E7EB` | 边框、divider |
+
+> 品牌配色是 `INVARIANT`（见[品牌规范](/global/brand)）；这里是把它作为设计的默认起点，产品**主色**可覆盖。
 
 ## 二、字体（REFERENCE）
 
-- **无衬线优先**，系统字体栈起步，追求好看再自托管（**走 Fontsource 自托管，禁止外链 Google Fonts**，保证含中国大陆在内全球可达）。
-- 默认字体栈：
+- 品牌字体为 **Fredoka**（展示 / 词标）+ **Inter**（UI / 正文），见[品牌规范](/global/brand#四、字体)。产品 UI 默认用 **Inter**。
+- 一律**自托管**（Fontsource：`@fontsource/inter` 等），**禁止外链 Google Fonts**，保证含中国大陆在内全球可达。
+- 默认字体栈（Inter 未加载时优雅回退）：
   ```css
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-    "Microsoft YaHei", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Microsoft YaHei", Roboto, "Helvetica Neue", Arial, sans-serif;
   ```
 
 ## 三、间距与圆角（REFERENCE）
