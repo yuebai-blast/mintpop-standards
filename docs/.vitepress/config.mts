@@ -42,9 +42,8 @@ export default defineConfig({
   lastUpdated: true,
 
   head: [
-    ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/assets/brand/favicon/favicon-32.png' }],
-    ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/assets/brand/favicon/favicon-16.png' }],
-    ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/assets/brand/favicon/apple-touch-icon.png' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/assets/brand/app-icon/mintpop-app-cloud.png' }],
+    ['link', { rel: 'apple-touch-icon', href: '/assets/brand/app-icon/mintpop-app-cloud.png' }],
     ['meta', { name: 'theme-color', content: '#17D1A7' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:title', content: 'MintPop Standards' }],
