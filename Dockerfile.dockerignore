@@ -1,0 +1,9 @@
+# 与 Dockerfile 同名共置；BuildKit 优先认它、不读根 .dockerignore
+node_modules
+docs/.vitepress/dist
+docs/.vitepress/cache
+**/.git
+.idea
+.claude
+.DS_Store
+*.local

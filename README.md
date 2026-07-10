@@ -1,0 +1,57 @@
+# MintPop Standards
+
+MintPop 品牌下各产品的**规范与制品中心**：统一账号接入、品牌、设计基线、图标等。
+一处维护，**同时服务人（浏览）与 coding Agent（复制 / 直取 markdown）**，各产品接入时来这里参考。
+
+## 形态
+
+- **内容源**：`docs/**/*.md`（markdown 单一事实来源）+ `docs/public/assets/`（图标等静态资源）。
+- **站点**：VitePress 构建成纯静态，nginx 直发，打成 Docker 镜像自部署（不依赖 Cloudflare Pages）。
+- **喂 Agent**：每篇文档顶部「📋 复制 Markdown」按钮；同时同一份 `.md` 按 URL 直接可取（`/auth/account-integration.md`），交给能联网的 Agent 自取。
+- **图标**：进仓库走 nginx 静态直发，**不上 MinIO**（随内容版本化、PR 评审、原子部署）。
+
+## 内容约定
+
+每篇规范在标题下标注类型：
+
+- `INVARIANT`（必须遵守）：跨产品铁律，如账号接入、品牌 Logo。
+- `REFERENCE`（参考基线）：默认值 + 偏离边界，如视觉设计。
+
+新增一篇规范 = 在 `docs/<分类>/` 下加一个 `.md`，头部写清类型与适用范围，再到 `docs/.vitepress/config.mts` 的 `sidebar` 补一行。
+
+## 本地开发
+
+```bash
+mise run install     # 首次：安装依赖并生成 pnpm-lock.yaml（构建镜像前必须先有 lockfile）
+mise run dev         # 本地热更新预览
+mise run build       # 构建静态产物到 docs/.vitepress/dist（含把源 .md 拷进产物）
+mise run preview     # 预览构建产物
+```
+
+> 「复制 Markdown」按钮靠 fetch 本页 `.md`，该文件由构建时的 `buildEnd` 钩子生成，**在 `dev` 下可能取不到、在 `preview` / 生产镜像下正常**。
+
+## 打镜像与部署
+
+```bash
+mise run image       # 本地构建镜像 mintpop-standards:local
+mise run up          # docker compose 拉起（拉 GHCR 已发布镜像）
+mise run down
+```
+
+部署机通过环境变量切版本与端口：
+
+```bash
+APP_TAG=v0.1.0 APP_PORT=8080 docker compose up -d
+```
+
+## 图标 / Logo
+
+放进 `docs/public/assets/icons/`，会原样发布到站点根：
+`docs/public/assets/icons/logo.svg` → `https://<域名>/assets/icons/logo.svg`。各产品直接引用同一份。
+
+## 待补（下一步）
+
+- `.github/workflows/`：`ci.yml`（构建门禁）、`release.yml`（tag 触发建镜像 + GitHub Release）、`action-notify.yml`（飞书通知）。
+- 发版 `mise run release` 任务。
+
+> 域名规划：`standards.mintpop.ai`。

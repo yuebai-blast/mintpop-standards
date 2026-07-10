@@ -1,0 +1,4 @@
+# pnpm 11 起，构建脚本放行设置从 package.json 移到这里
+# 放行 esbuild 的安装脚本（Vite/VitePress 依赖它下载平台二进制）
+allowBuilds:
+  esbuild: true

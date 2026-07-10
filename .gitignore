@@ -1,0 +1,9 @@
+node_modules/
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+
+# 本地工程文件（不入库）
+.idea/
+.claude/
+.DS_Store
+*.local
