@@ -55,7 +55,7 @@
 
 ## 六、资源样例（INVARIANT）
 
-品牌级资源在本站 `assets/brand/`，各产品**引用同一份**，不要自己重画。例：`https://standards.mintpop.ai/assets/brand/wordmark/mintpop-wordmark-dark.png`。
+品牌级资源在本站 `assets/brand/`，各产品**引用同一份**，不要自己重画。**点下方任意文件即可复制它的完整链接**，直接粘到代码或喂给 Agent。
 
 <BrandAssets />
 
