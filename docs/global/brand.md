@@ -4,8 +4,6 @@
 >
 > Slogan：**Pop into something fresh.** 品牌名、标记、配色、字体跨产品一致，保证用户在不同产品间认得出这是同一个品牌。
 
-<img src="/assets/brand/brand-board.png" alt="MintPop 品牌总览板" style="width:100%;border-radius:12px;border:1px solid var(--vp-c-divider);margin:8px 0 4px" />
-
 ## 一、品牌名写法（INVARIANT）
 
 - 正文写法：**MintPop**（M、P 大写，连写，无空格）。
@@ -50,23 +48,16 @@
 
 按背景深浅选版本，**不要**把深字版硬放到深底上（反之亦然）：
 
-**浅背景 → 深字版** `mintpop-wordmark-dark`
-<div style="background:var(--vp-c-bg-soft);padding:24px;border-radius:12px;margin:8px 0"><img src="/assets/brand/wordmark/mintpop-wordmark-dark.png" alt="MintPop 词标（深字）" width="220" /></div>
+- **浅背景 → 深字版** `wordmark/mintpop-wordmark-dark.png`
+- **深背景 → 白字版** `wordmark/mintpop-wordmark-light.png`
 
-**深背景 → 白字版** `mintpop-wordmark-light`
-<div style="background:#0B0B0C;padding:24px;border-radius:12px;margin:8px 0"><img src="/assets/brand/wordmark/mintpop-wordmark-light.png" alt="MintPop 词标（白字）" width="220" /></div>
+两版的实际样子见下方[资源样例](#六、资源样例)。
 
-## 六、资源下载（直接拉取）
+## 六、资源样例（INVARIANT）
 
 品牌级资源在本站 `assets/brand/`，各产品**引用同一份**，不要自己重画。例：`https://<域名>/assets/brand/wordmark/mintpop-wordmark-dark.png`。
 
-| 分类 | 文件 | 说明 |
-|---|---|---|
-| 词标 `wordmark/` | `mintpop-wordmark-dark.png` / `-light.png` | 深字（浅底）/ 白字（深底） |
-| 图标 `icon/` | `mintpop-icon.png`（原生 238×420）、`-square`（420×420 居中）、`-256/-128/-64` | 透明底，下采样档清晰 |
-| 应用图标 `app-icon/` | `mintpop-app-cloud` / `-white` / `avatar-round`（@512） | 浅灰底 / 白底 / 圆形头像 |
-| Favicon `favicon/` | `favicon-16/32/48/180/192/256.png`、`apple-touch-icon.png` | 网页图标全套 |
-| 总览板 | `brand-board.png` | 一图速览整套品牌系统 |
+<BrandAssets />
 
 ## 七、使用规则（INVARIANT）
 
