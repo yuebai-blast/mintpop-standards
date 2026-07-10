@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { products } from './products'
 
 // 递归收集所有源 markdown（排除 .vitepress），构建后原样拷进产物。
 // 目的：同一份 .md 既能被页面「复制 Markdown」按钮 fetch，又能被 Agent 按 URL 直取。
@@ -16,40 +17,63 @@ async function collectMarkdown(dir: string, base = ''): Promise<string[]> {
   return out
 }
 
+// 各产品侧边栏：进入某产品目录时显示该产品自己的文档树（由 products.ts 生成）
+const productSidebar = Object.fromEntries(
+  products.map((p) => [
+    `/products/${p.slug}/`,
+    [
+      {
+        text: p.name,
+        items: [
+          { text: '概览', link: `/products/${p.slug}/` },
+          { text: '设计规范', link: `/products/${p.slug}/design` },
+        ],
+      },
+      { text: '← 返回品牌总规范', link: '/global/' },
+    ],
+  ]),
+)
+
 export default defineConfig({
   lang: 'zh-CN',
   title: 'MintPop Standards',
-  description: 'MintPop 品牌下各产品的设计与接入规范中心（供人查阅，也供 coding Agent 直接参考）',
+  description: 'MintPop 品牌规范中心：品牌总规范 + 各产品规范，供人查阅，也供 coding Agent 直接参考',
   cleanUrls: true,
   lastUpdated: true,
 
   themeConfig: {
     nav: [
       { text: '首页', link: '/' },
-      { text: '账号接入', link: '/auth/account-integration' },
-      { text: '品牌', link: '/brand/logo-and-usage' },
-      { text: '设计', link: '/design/baseline' },
-    ],
-    sidebar: [
+      { text: '品牌总规范', link: '/global/' },
       {
-        text: '账号 / 认证 · INVARIANT（必须遵守）',
-        items: [{ text: '统一账号接入流程', link: '/auth/account-integration' }],
-      },
-      {
-        text: '品牌 · INVARIANT（必须遵守）',
-        items: [{ text: 'Logo 与用法', link: '/brand/logo-and-usage' }],
-      },
-      {
-        text: '设计 · REFERENCE（参考基线，可自定义）',
-        items: [{ text: '设计基线', link: '/design/baseline' }],
+        text: '产品',
+        items: products.map((p) => ({ text: p.name, link: `/products/${p.slug}/` })),
       },
     ],
+
+    // 按路径前缀切换侧边栏：/global/ 一套，各产品各一套
+    sidebar: {
+      '/global/': [
+        {
+          text: '品牌总规范',
+          items: [
+            { text: '总览', link: '/global/' },
+            { text: '统一账号接入 · INVARIANT', link: '/global/account-integration' },
+            { text: '品牌 Logo 与用法 · INVARIANT', link: '/global/brand' },
+            { text: '设计基线 · REFERENCE', link: '/global/design-baseline' },
+            { text: '如何接入新产品', link: '/global/adding-a-product' },
+          ],
+        },
+      ],
+      ...productSidebar,
+    },
+
     outline: { level: [2, 3], label: '本页目录' },
     docFooter: { prev: false, next: false },
     search: { provider: 'local' },
   },
 
-  // 构建后把源 .md 拷进产物根，使 /auth/account-integration.md 等 URL 直接可取
+  // 构建后把源 .md 拷进产物根，使 /global/xxx.md、/products/<slug>/xxx.md 等 URL 直接可取
   async buildEnd({ srcDir, outDir }) {
     const files = await collectMarkdown(srcDir)
     for (const f of files) {

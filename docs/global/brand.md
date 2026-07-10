@@ -1,8 +1,8 @@
-# Logo 与品牌用法
+# 品牌 Logo 与用法
 
 > **类型：`INVARIANT`（必须遵守）** · 适用范围：MintPop 品牌下所有产品
 >
-> Logo、品牌名写法、域名规则跨产品一致，保证用户在不同产品间认得出这是同一个品牌。
+> 品牌名写法、Logo、域名规则跨产品一致，保证用户在不同产品间认得出这是同一个品牌。
 
 ## 一、品牌名写法（INVARIANT）
 
@@ -10,17 +10,19 @@
 - ❌ 错误：`Mintpop` / `mint pop` / `MINTPOP`（正文里）/ `Mint-Pop`。
 - 产品命名：`MintPop <ProductName>`（如 `MintPop Keeper`）；口语可简称产品名。
 
-## 二、Logo 资源（直接拉取）
+## 二、品牌级 Logo 资源（直接拉取）
 
-Logo 与图标放在本站 `assets/`，各产品**直接引用同一份**，不要自己重画：
+品牌级 Logo 放在本站 `assets/brand/`，各产品**直接引用同一份**，不要自己重画：
 
 | 用途 | 路径 |
 |---|---|
-| 主 Logo（SVG，深色可用） | `/assets/icons/logo.svg` |
-| 反白 Logo（深色底用） | `/assets/icons/logo-inverse.svg` |
-| 纯图标 / favicon | `/assets/icons/mark.svg` |
+| 主 Logo（SVG，浅底用） | `/assets/brand/logo.svg` |
+| 反白 Logo（深色底用） | `/assets/brand/logo-inverse.svg` |
+| 纯图标 / favicon | `/assets/brand/mark.svg` |
 
-> 例：`https://<你的域名>/assets/icons/logo.svg`。当前为占位，把正式素材放进仓库 `docs/public/assets/icons/` 即生效。
+> 例：`https://<你的域名>/assets/brand/logo.svg`。当前为占位，把正式素材放进仓库 `docs/public/assets/brand/` 即生效。
+>
+> 各**产品自己的** Logo / 素材放 `docs/public/assets/products/<产品>/`，见对应产品页。
 
 ## 三、使用规则（INVARIANT）
 
