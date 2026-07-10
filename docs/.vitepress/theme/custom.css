@@ -1,0 +1,137 @@
+/**
+ * MintPop 品牌主题层
+ * 把 /global/brand（INVARIANT）+ /global/design-baseline（REFERENCE）落到 VitePress。
+ *
+ * - 主色：Mint #17D1A7（brand.md 实采样），hover/按下走 Mint Deep / Bright。
+ * - 字体：展示大标题/词标用 Fredoka；UI 与正文用 Inter。二者均自托管（见 index.ts import Fontsource），不外链 Google Fonts。
+ * - 可访问性：Mint 偏亮，链接文字在浅底会不达 AA，故 --vp-c-brand-1 用「深 Mint」保证 ≥4.5:1；
+ *   Mint 实色按钮统一用 Ink 深字（深字压亮底，对比度高），而非白字。
+ */
+
+:root {
+  /* —— 字体（design-baseline 默认字体栈；Inter 由 Fontsource 交付） —— */
+  --vp-font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Microsoft YaHei", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Fredoka 展示字体（词标/大标题），非 VitePress 原生变量，供本主题选择器引用 */
+  --mp-font-display: "Fredoka", var(--vp-font-family-base);
+
+  /* —— 品牌色阶（brand.md 配色） —— */
+  --mp-mint: #17D1A7; /* 主色 */
+  --mp-mint-bright: #1FE3AD; /* 渐变高光端 / hover 提亮 */
+  --mp-mint-deep: #0FB389; /* 渐变深端 / 按下 */
+  --mp-mint-ink: #087a5c; /* 深 Mint：浅底上的链接文字，达 WCAG AA（≈5.3:1） */
+  --mp-ink: #0b0b0c; /* 文字 / 深底 */
+  --mp-cloud: #f4f8f6; /* 浅色瓦片底 */
+}
+
+/* —— 浅色主题：品牌色映射到 VitePress brand 变量 —— */
+:root {
+  --vp-c-brand-1: var(--mp-mint-ink); /* 链接 / 内联代码 / 强调文字（AA 达标） */
+  --vp-c-brand-2: var(--mp-mint-deep); /* hover */
+  --vp-c-brand-3: var(--mp-mint); /* 实色面（tip 等） */
+  --vp-c-brand-soft: rgba(23, 209, 167, 0.14);
+
+  /* 次要文本 / 分隔线对齐 design-baseline */
+  --vp-c-text-2: #6b7280;
+  --vp-c-divider: #e5e7eb;
+
+  /* 品牌按钮：Mint 实底 + Ink 深字（深字压亮底，比白字更清晰、更「Pop」） */
+  --vp-button-brand-bg: var(--mp-mint);
+  --vp-button-brand-text: var(--mp-ink);
+  --vp-button-brand-hover-bg: var(--mp-mint-bright);
+  --vp-button-brand-hover-text: var(--mp-ink);
+  --vp-button-brand-active-bg: var(--mp-mint-deep);
+  --vp-button-brand-active-text: var(--mp-ink);
+
+  /* text（规范中心）保留 Mint 渐变强调 */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, var(--mp-mint-bright) 30%, var(--mp-mint-deep));
+}
+
+/* —— 深色主题：Mint 在深底对比度天然充足，用更亮的绿 —— */
+.dark {
+  --vp-c-brand-1: #2ee6b8; /* 深底上的亮 Mint 链接 */
+  --vp-c-brand-2: var(--mp-mint);
+  --vp-c-brand-3: var(--mp-mint-bright);
+  --vp-c-brand-soft: rgba(23, 209, 167, 0.16);
+
+  /* 按钮仍是 Mint 实底 + Ink 深字（Mint 够亮，深字在深浅主题都清晰） */
+  --vp-button-brand-bg: var(--mp-mint);
+  --vp-button-brand-text: var(--mp-ink);
+  --vp-button-brand-hover-bg: var(--mp-mint-bright);
+  --vp-button-brand-hover-text: var(--mp-ink);
+  --vp-button-brand-active-bg: var(--mp-mint-deep);
+  --vp-button-brand-active-text: var(--mp-ink);
+}
+
+/* —— 首页 hero 词标图（替代文字 MintPop）—— */
+/* 按背景深浅切两版：浅底深字版、深底白字版（/global/brand 词标规范）。
+   深字版素材烘焙了浅底且四周留白大，用 object-fit:cover 裁掉纵向留白让字号正常；
+   白字版透明紧凑，用 contain。 */
+.hero-wordmark {
+  display: none;
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+  margin: 0 0 22px; /* 左对齐，与 hero 的「规范中心」/按钮一致 */
+}
+html:not(.dark) .hero-wordmark--light {
+  display: block;
+}
+html.dark .hero-wordmark--dark {
+  display: block;
+}
+
+/* hero 背后一层克制的 Mint 光晕，避免纯文字 hero 过于空旷 */
+.VPHome .VPHero {
+  position: relative;
+}
+.VPHome .VPHero::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: -10%;
+  left: 50%;
+  width: 620px;
+  max-width: 90%;
+  height: 360px;
+  transform: translateX(-50%);
+  background: radial-gradient(50% 50% at 50% 50%, rgba(23, 209, 167, 0.16), transparent 70%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+.VPHome .VPHero .container {
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 640px) {
+  .hero-wordmark {
+    height: 60px;
+  }
+}
+@media (min-width: 960px) {
+  .hero-wordmark {
+    height: 68px;
+  }
+}
+
+/* —— Fredoka 用于「展示大标题 / 词标」：首页 hero 名 + 文档页 H1 —— */
+/* 正文与 h2/h3 保持 Inter，克制、不喧宾夺主（符合 design-baseline 的克制感） */
+.VPHero .name,
+.VPHero .text {
+  font-family: var(--mp-font-display);
+  letter-spacing: -0.01em;
+}
+.vp-doc h1 {
+  font-family: var(--mp-font-display);
+  letter-spacing: -0.015em;
+}
+
+/* 大标题优化行高与断词，避免孤字（redesign 基本功） */
+.VPHero .name,
+.VPHero .text,
+.vp-doc h1,
+.vp-doc h2 {
+  text-wrap: balance;
+}

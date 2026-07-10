@@ -41,10 +41,20 @@ export default defineConfig({
   cleanUrls: true,
   lastUpdated: true,
 
-  head: [['link', { rel: 'icon', type: 'image/png', href: '/assets/brand/favicon/favicon-32.png' }]],
+  head: [
+    ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/assets/brand/favicon/favicon-32.png' }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/assets/brand/favicon/favicon-16.png' }],
+    ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/assets/brand/favicon/apple-touch-icon.png' }],
+    ['meta', { name: 'theme-color', content: '#17D1A7' }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:title', content: 'MintPop Standards' }],
+    ['meta', { property: 'og:description', content: 'MintPop 品牌规范中心：品牌总规范 + 各产品规范' }],
+    ['meta', { property: 'og:image', content: '/assets/brand/app-icon/mintpop-app-cloud.png' }],
+  ],
 
   themeConfig: {
-    logo: '/assets/brand/icon/mintpop-icon-square.png',
+    // 站点图标：app-cloud 瓦片（自带 Cloud 浅底，深浅主题通用）
+    logo: '/assets/brand/app-icon/mintpop-app-cloud.png',
     nav: [
       { text: '首页', link: '/' },
       { text: '品牌总规范', link: '/global/' },

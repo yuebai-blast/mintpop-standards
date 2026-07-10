@@ -5,6 +5,8 @@
   "type": "module",
   "description": "MintPop 品牌下各产品的设计与接入规范中心（供人与 coding Agent 参考）",
   "devDependencies": {
+    "@fontsource/fredoka": "^5.2.10",
+    "@fontsource/inter": "^5.2.8",
     "vitepress": "^1.6.3",
     "vue": "^3.5.13"
   }

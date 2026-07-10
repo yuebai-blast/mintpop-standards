@@ -1,6 +1,12 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { withBase } from 'vitepress'
 import { products } from '../products'
+
+// logo 文件缺失（如产品尚未放素材）时，img 会 404；记录出错的 slug，回退到首字母徽标，
+// 避免宫格里出现「坏图 + alt 文字」的破碎观感。
+const broken = ref<Record<string, boolean>>({})
+const letter = (name: string) => name.replace(/^MintPop\s*/, '').charAt(0)
 </script>
 
 <template>
@@ -12,8 +18,13 @@ import { products } from '../products'
       :href="withBase(`/products/${p.slug}/`)"
     >
       <div class="logo">
-        <img v-if="p.logo" :src="withBase(p.logo)" :alt="p.name" />
-        <span v-else class="logo-fallback">{{ p.name.replace(/^MintPop\s*/, '').charAt(0) }}</span>
+        <img
+          v-if="p.logo && !broken[p.slug]"
+          :src="withBase(p.logo)"
+          :alt="p.name"
+          @error="broken[p.slug] = true"
+        />
+        <span v-else class="logo-fallback">{{ letter(p.name) }}</span>
       </div>
       <div class="meta">
         <div class="name">{{ p.name }}</div>

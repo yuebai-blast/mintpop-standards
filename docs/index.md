@@ -1,7 +1,7 @@
 ---
 layout: home
 hero:
-  name: MintPop
+  # name 不再用文字渲染，改由 Layout 的 home-hero-info-before 槽注入现成词标图（见 theme/Layout.vue）
   text: 规范中心
   tagline: 品牌总规范 + 各产品规范。供人查阅，也供 coding Agent 直接参考。
   actions:
