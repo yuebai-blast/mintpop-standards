@@ -6,7 +6,7 @@
 
 ## 一、配色（默认值，可覆盖）
 
-默认取品牌 [Mint 配色](/global/brand#三、配色)为主色，产品可换主色但保留「浅色克制、强调色点缀」的思路。
+默认取品牌 [Mint 配色](/global/brand#三、配色-invariant)为主色，产品可换主色但保留「浅色克制、强调色点缀」的思路。
 
 | 语义 | 默认值 | 说明 |
 |---|---|---|
@@ -21,7 +21,7 @@
 
 ## 二、字体（REFERENCE）
 
-- 品牌字体为 **Fredoka**（展示 / 词标）+ **Inter**（UI / 正文），见[品牌规范](/global/brand#四、字体)。产品 UI 默认用 **Inter**。
+- 品牌字体为 **Fredoka**（展示 / 词标）+ **Inter**（UI / 正文），见[品牌规范](/global/brand#四、字体-invariant)。产品 UI 默认用 **Inter**。
 - 一律**自托管**（Fontsource：`@fontsource/inter` 等），**禁止外链 Google Fonts**，保证含中国大陆在内全球可达。
 - 默认字体栈（Inter 未加载时优雅回退）：
   ```css
