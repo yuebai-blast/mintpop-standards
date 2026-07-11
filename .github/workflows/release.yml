@@ -90,7 +90,7 @@ jobs:
       # docs/chore/ci/build/style/test 落 uncategorized 被模板自然排除。
       - name: 生成变更日志
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@v5
+        uses: mikepenz/release-changelog-builder-action@v6
         with:
           mode: COMMIT
           configurationJson: |
@@ -136,7 +136,7 @@ jobs:
           echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
 
       - name: 发布 GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: MintPop 规范中心 v${{ steps.notes.outputs.version }}
           body_path: notes.md
