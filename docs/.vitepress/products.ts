@@ -25,7 +25,7 @@ export const products: Product[] = [
   {
     slug: 'game-seer',
     name: 'MintPop Game Seer',
-    tagline: '（示例）游戏数据洞察站点',
+    tagline: '世界杯赛事预测 · AI 分析师 × 量化双引擎',
     logo: '/assets/products/game-seer/logo.svg',
   },
   {
