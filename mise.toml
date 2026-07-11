@@ -36,3 +36,85 @@ run = "docker compose up -d"
 [tasks.down]
 description = "停止站点"
 run = "docker compose down"
+
+# —— 发版 ——
+# 统一签名（两个位置参数均可选、按形状消歧）：
+#   mise run release                    版本取最新稳定 tag 的 patch+1，无说明
+#   mise run release "更新说明"          patch+1，且带说明
+#   mise run release v0.4.0             用指定版本号，无说明
+#   mise run release v0.4.0 "更新说明"   指定版本号 + 说明
+[tasks.release]
+description = "发版：校验→同步 package.json 版本并提交→打 tag→推送，由 tag 触发 Release workflow"
+usage = '''
+arg "[arg1]" help="版本号(v?X.Y.Z[-pre]) 或 更新说明；只传一个时按形状判定"
+arg "[arg2]" help="更新说明（仅当第一个参数是版本号时才用）"
+'''
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+arg1="${usage_arg1:-}"
+arg2="${usage_arg2:-}"
+
+# 形如 v?X.Y.Z(-pre) 即视为版本号，否则视为更新说明
+is_version() { printf '%s' "$1" | grep -Eq '^v?[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$'; }
+
+ver=""
+notes=""
+if [ -n "$arg2" ]; then
+  # 传两个：第一个必须是版本号
+  is_version "$arg1" || { echo "错误：传两个参数时第一个必须是版本号(v?X.Y.Z)，实际为「${arg1}」" >&2; exit 1; }
+  ver="$arg1"; notes="$arg2"
+elif [ -n "$arg1" ]; then
+  if is_version "$arg1"; then ver="$arg1"; else notes="$arg1"; fi
+fi
+
+# 一次 fetch 同时供「自动算版本号」与「main 落后检查」复用
+git fetch origin main --tags
+
+# 未显式给版本号：取最新稳定 tag 的 patch+1（禁用 sort -V，用 git 内置版本排序）
+if [ -z "$ver" ]; then
+  latest="$(git tag -l --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n1 || true)"
+  if [ -z "$latest" ]; then
+    ver="v0.0.1"
+  else
+    IFS=. read -r major minor patch <<< "${latest#v}"
+    ver="v${major}.${minor}.$((patch + 1))"
+  fi
+fi
+# 规范化：确保带 v 前缀
+case "$ver" in v*) : ;; *) ver="v${ver}" ;; esac
+
+# 发版前校验，任一不过即中止、绝不打 tag
+printf '%s' "${ver#v}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$' \
+  || { echo "错误：版本号「${ver}」不符合 v?X.Y.Z(-pre)" >&2; exit 1; }
+branch="$(git rev-parse --abbrev-ref HEAD)"
+[ "$branch" = "main" ] || { echo "错误：当前在 ${branch}，发版必须在 main" >&2; exit 1; }
+[ -z "$(git status --porcelain)" ] || { echo "错误：工作区不干净，先提交或清理后再发版" >&2; exit 1; }
+if git rev-parse -q --verify "refs/tags/${ver}" >/dev/null; then
+  echo "错误：tag ${ver} 已存在" >&2; exit 1
+fi
+behind="$(git rev-list --count HEAD..origin/main)"
+[ "$behind" -eq 0 ] || { echo "错误：本地 main 落后 origin/main ${behind} 个提交，先 pull" >&2; exit 1; }
+
+echo "==> 准备发版 ${ver}${notes:+（说明：${notes}）}"
+
+# 版本号承载：package.json 有 version 字段，同步更新；仅在确有改动时提交
+pnpm version "${ver#v}" --no-git-tag-version --allow-same-version
+if ! git diff --quiet -- package.json; then
+  git add package.json
+  git commit -m "chore(release): ${ver}"
+fi
+
+# 打 tag：有说明用 annotated（注释会被 Release 流程置顶），无说明用轻量 tag
+if [ -n "$notes" ]; then
+  git tag -a "${ver}" -m "${notes}"
+else
+  git tag "${ver}"
+fi
+
+# 先推 main 再推 tag，由 tag 触发 Release workflow
+git push origin main
+git push origin "${ver}"
+echo "==> 已推送 ${ver}，Release workflow 将由该 tag 触发"
+'''

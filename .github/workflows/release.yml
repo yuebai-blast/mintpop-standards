@@ -1,0 +1,136 @@
+name: Release
+
+# 交付模型：把镜像推到 GHCR（可分发制品，供部署机 pull）→ 语义为 release，非 deploy。
+# 单组件仓：直接用动作名 release.yml / name: Release（无组件名）。
+on:
+  push:
+    tags: ["v*.*.*"]     # 发版只由版本 tag 触发；push 到 main 永不发版
+  workflow_dispatch: {}  # 手动逃生口（紧急重推 / 回滚验证）
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release          # 串行，避免两次 tag 同时推镜像互相覆盖
+  cancel-in-progress: false
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}   # 与 docker-compose.yml 的镜像名一致
+
+jobs:
+  image:
+    name: 构建并推送镜像
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write     # 推 GHCR
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      # 单架构默认（runner 本机 amd64），不加 QEMU；Buildx 仍保留：gha 层缓存与
+      # Dockerfile.dockerignore 都依赖 BuildKit。
+      - name: 设置 Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 登录 GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 打标交给标准工具，禁止手写 shell 拼 tag。
+      # type=semver 默认剥 v（v1.2.0 -> 1.2.0）；latest=auto 预发布不打 latest；
+      # 非 tag 的手动逃生口回退打 sha-<短SHA>（不触发 latest）。
+      - name: 计算镜像标签
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=sha,enable=${{ github.ref_type != 'tag' }}
+          flavor: |
+            latest=auto
+
+      # 发版质量门禁：镜像构建内部会跑 mise run build（buildEnd 钩子 + 死链校验），
+      # 构建失败则本步失败、push 不发生 —— 这就是「镜像推出前会因构建失败而中断的关卡」。
+      - name: 构建并推送镜像
+        uses: docker/build-push-action@v6
+        with:
+          context: .              # 仓库根，让 mise.toml 进上下文
+          file: Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  github-release:
+    name: 建 GitHub Release
+    needs: image                       # 镜像推送成功才建 Release（失败的发版不留 Release 页）
+    if: github.ref_type == 'tag'       # 仅 tag 触发时建；workflow_dispatch 逃生口不建
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write                  # 建 Release
+    steps:
+      - name: 检出代码（全量历史，changelog COMMIT 模式需要）
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 按约定式提交类型过滤噪声：只保留 feat/fix/perf/refactor/revert，
+      # docs/chore/ci/build/style/test 落 uncategorized 被模板自然排除。
+      - name: 生成变更日志
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v5
+        with:
+          mode: COMMIT
+          configurationJson: |
+            {
+              "label_extractor": [
+                {
+                  "pattern": "^(feat|fix|perf|refactor|revert|build|chore|ci|docs|style|test)[^:]*:.*",
+                  "target": "$1",
+                  "on_property": "title"
+                }
+              ],
+              "categories": [
+                { "title": "### ✨ 新功能", "labels": ["feat"] },
+                { "title": "### 🐛 修复", "labels": ["fix"] },
+                { "title": "### ⚡ 性能", "labels": ["perf"] },
+                { "title": "### ♻️ 重构", "labels": ["refactor"] },
+                { "title": "### ⏪ 回滚", "labels": ["revert"] }
+              ],
+              "template": "#{{CHANGELOG}}"
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 组装正文：annotated tag 注释置顶（轻量 tag 无注释则跳过）+ 变更日志，
+      # 并统一判空补占位（覆盖「有提交但全被过滤 -> 正文整篇空白」的情形）。
+      - name: 组装 Release 正文
+        id: notes
+        env:
+          TAG: ${{ github.ref_name }}
+          CHANGELOG: ${{ steps.changelog.outputs.changelog }}
+        run: |
+          set -euo pipefail
+          : > notes.md
+          # 轻量 tag 直接指向 commit，%(contents) 会错把 commit 信息当注释，故先判类型
+          if [ "$(git cat-file -t "$TAG")" = "tag" ]; then
+            git tag -l --format='%(contents)' "$TAG" >> notes.md
+            printf '\n\n' >> notes.md
+          fi
+          printf '%s\n' "$CHANGELOG" >> notes.md
+          if [ -z "$(tr -d '[:space:]' < notes.md)" ]; then
+            echo "- 本次无面向用户的变更" > notes.md
+          fi
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+
+      - name: 发布 GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: MintPop 规范中心 v${{ steps.notes.outputs.version }}
+          body_path: notes.md
