@@ -7,8 +7,10 @@ ENV MISE_DATA_DIR=/mise MISE_CONFIG_DIR=/mise MISE_CACHE_DIR=/mise/cache \
     MISE_INSTALL_PATH=/usr/local/bin/mise PATH=/mise/shims:$PATH
 # 只显式装本镜像所需工具；关掉 mise run 前的「自动装全部 [tools]」
 ENV MISE_TASK_RUN_AUTO_INSTALL=false
+# libatomic1：mise 装的 pnpm 是官方独立二进制（Node SEA 打包），运行时链接 libatomic.so.1，
+# debian slim 底座默认不含，缺了 pnpm 一跑就 "error while loading shared libraries" 退 127
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl git ca-certificates \
+    && apt-get install -y --no-install-recommends curl git ca-certificates libatomic1 \
     && rm -rf /var/lib/apt/lists/* \
     && curl https://mise.run | sh
 
