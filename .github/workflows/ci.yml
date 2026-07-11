@@ -1,7 +1,7 @@
 name: CI
 
 # 单组件仓：直接用动作名 ci.yml / name: CI（无组件名）。
-# 质量门禁：VitePress 构建能否成功（默认会因死链等失败），即本站唯一有意义的检查。
+# 质量门禁两层：① typecheck 校验 .vitepress 主题代码类型；② VitePress 构建能否成功（默认会因死链等失败）。
 on:
   pull_request:
   push:
@@ -29,6 +29,9 @@ jobs:
 
       - name: 安装项目依赖
         run: mise run install --frozen
+
+      - name: 类型检查（.vitepress 主题代码，build 不校验类型故单列）
+        run: mise run typecheck
 
       - name: 构建静态站点（校验可构建、无死链）
         run: mise run build

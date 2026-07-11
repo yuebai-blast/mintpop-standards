@@ -24,6 +24,11 @@ run = "pnpm vitepress build docs"
 description = "本地预览生产构建产物"
 run = "pnpm vitepress preview docs"
 
+# —— 质量 ——
+[tasks.typecheck]
+description = "类型检查 .vitepress 下的 ts/vue 主题代码（build 只转译不校验类型，故单列一层）"
+run = "pnpm vue-tsc --noEmit -p tsconfig.json"
+
 # —— 镜像 / 部署 ——
 [tasks.image]
 description = "构建镜像（Dockerfile，mise 多阶段；context 取仓库根）"

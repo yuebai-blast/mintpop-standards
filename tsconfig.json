@@ -1,0 +1,27 @@
+{
+  // 供 vue-tsc 做类型检查用（mise run typecheck）。VitePress 站点本体的类型不由构建把关，
+  // build 走 esbuild 只转译不校验类型，故单列一层 typecheck 兜住 .vitepress 下的 ts/vue 代码。
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": ["node"]
+  },
+  // 只检查主题定制源码；产物（dist）与缓存（cache）里的生成文件不纳入
+  "include": [
+    "docs/.vitepress/**/*.ts",
+    "docs/.vitepress/**/*.mts",
+    "docs/.vitepress/**/*.vue"
+  ],
+  "exclude": [
+    "node_modules",
+    "docs/.vitepress/dist",
+    "docs/.vitepress/cache"
+  ]
+}

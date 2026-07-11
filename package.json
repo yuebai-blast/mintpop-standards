@@ -7,7 +7,10 @@
   "devDependencies": {
     "@fontsource/fredoka": "^5.2.10",
     "@fontsource/inter": "^5.2.8",
+    "@types/node": "^26.1.1",
+    "typescript": "^5.9.3",
     "vitepress": "^1.6.3",
-    "vue": "^3.5.13"
+    "vue": "^3.5.13",
+    "vue-tsc": "^3.3.7"
   }
 }
