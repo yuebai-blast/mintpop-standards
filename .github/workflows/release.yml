@@ -33,7 +33,7 @@ jobs:
       packages: write     # 推 GHCR
     steps:
       - name: 检出代码
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # 单架构默认（runner 本机 amd64），不加 QEMU；Buildx 仍保留：gha 层缓存与
       # Dockerfile.dockerignore 都依赖 BuildKit。
@@ -82,7 +82,7 @@ jobs:
       contents: write                  # 建 Release
     steps:
       - name: 检出代码（全量历史，changelog COMMIT 模式需要）
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 

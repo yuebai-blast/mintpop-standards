@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # jdx/mise-action 默认 install: true，已自动按 mise.toml [tools] 装 node/pnpm，
       # 无需再写 mise install；这里只需显式装项目依赖（node_modules，mise-action 不管）。
