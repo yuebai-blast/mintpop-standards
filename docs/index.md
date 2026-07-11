@@ -8,9 +8,6 @@ hero:
     - theme: brand
       text: 品牌总规范
       link: /global/
-    - theme: alt
-      text: 如何接入新产品
-      link: /global/adding-a-product
 ---
 
 ## 产品

@@ -1,7 +1,7 @@
 // 产品清单 —— 单一事实来源
 // 同时驱动：首页产品宫格、顶部导航「产品」下拉、各产品侧边栏。
 // 新增一个产品 = 这里加一条 + 建 docs/products/<slug>/（index.md + design.md）+
-//   放素材到 docs/public/assets/products/<slug>/。详见 /global/adding-a-product。
+//   放素材到 docs/public/assets/products/<slug>/。
 
 export interface Product {
   /** 目录 slug，对应 docs/products/<slug>/ 与 /assets/products/<slug>/ */

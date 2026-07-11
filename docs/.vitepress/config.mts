@@ -74,7 +74,6 @@ export default defineConfig({
             { text: '统一支付接入 · INVARIANT', link: '/global/payment-integration' },
             { text: '品牌 Logo 与用法 · INVARIANT', link: '/global/brand' },
             { text: '设计基线 · REFERENCE', link: '/global/design-baseline' },
-            { text: '如何接入新产品', link: '/global/adding-a-product' },
           ],
         },
       ],
