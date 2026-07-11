@@ -1,6 +1,6 @@
 {
   "name": "mintpop-standards",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "MintPop 品牌下各产品的设计与接入规范中心（供人与 coding Agent 参考）",
