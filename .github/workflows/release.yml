@@ -18,8 +18,15 @@ env:
   IMAGE: ghcr.io/${{ github.repository }}   # 与 docker-compose.yml 的镜像名一致
 
 jobs:
+  # 发版门禁：与 CI 共用同一份 quality.yml（typecheck + build），不过则后续构建/推送不执行。
+  # 本仓直接 push main、无 PR 门禁，故门禁必须内置到发版链路（docker-image-publish 第 2 条）。
+  verify:
+    name: 质量门禁
+    uses: ./.github/workflows/quality.yml
+
   image:
     name: 构建并推送镜像
+    needs: verify         # 质量门禁通过才构建/推送镜像
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -54,8 +61,7 @@ jobs:
           flavor: |
             latest=auto
 
-      # 发版质量门禁：镜像构建内部会跑 mise run build（buildEnd 钩子 + 死链校验），
-      # 构建失败则本步失败、push 不发生 —— 这就是「镜像推出前会因构建失败而中断的关卡」。
+      # 质量门禁已由上游 verify job（quality.yml：typecheck + build）把关，此处只管构建镜像并推送。
       - name: 构建并推送镜像
         uses: docker/build-push-action@v6
         with:

@@ -1,0 +1,33 @@
+name: Quality
+
+# 可复用质量门禁（workflow_call）：install → typecheck → build。
+# 由 ci.yml（PR / push main）与 release.yml（发版前 verify）共用同一份定义，
+# 保证「合并前校验」与「发版前校验」永不漂移（改一处两处生效）。
+# 复用型不独立触发，故不进 action-notify.yml 的监听列表。
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: 质量校验（typecheck + build）
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      # jdx/mise-action 默认 install: true，已自动按 mise.toml [tools] 装 node/pnpm，
+      # 无需再写 mise install；这里只需显式装项目依赖（node_modules，mise-action 不管）。
+      - name: 装配 mise 工具链
+        uses: jdx/mise-action@v4
+
+      - name: 安装项目依赖
+        run: mise run install --frozen
+
+      - name: 类型检查（.vitepress 主题代码，build 不校验类型故单列）
+        run: mise run typecheck
+
+      - name: 构建静态站点（校验可构建、无死链）
+        run: mise run build

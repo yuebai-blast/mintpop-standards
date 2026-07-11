@@ -1,7 +1,8 @@
 name: CI
 
 # 单组件仓：直接用动作名 ci.yml / name: CI（无组件名）。
-# 质量门禁两层：① typecheck 校验 .vitepress 主题代码类型；② VitePress 构建能否成功（默认会因死链等失败）。
+# 质量检查抽在可复用的 quality.yml，本文件只负责「合并前触发」，
+# 与 release.yml 的发版前 verify 共用同一份定义、永不漂移。
 on:
   pull_request:
   push:
@@ -15,23 +16,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: 构建校验
-    runs-on: ubuntu-latest
-    steps:
-      - name: 检出代码
-        uses: actions/checkout@v4
-
-      # jdx/mise-action 默认 install: true，已自动按 mise.toml [tools] 装 node/pnpm，
-      # 无需再写 mise install；这里只需显式装项目依赖（node_modules，mise-action 不管）。
-      - name: 装配 mise 工具链
-        uses: jdx/mise-action@v4
-
-      - name: 安装项目依赖
-        run: mise run install --frozen
-
-      - name: 类型检查（.vitepress 主题代码，build 不校验类型故单列）
-        run: mise run typecheck
-
-      - name: 构建静态站点（校验可构建、无死链）
-        run: mise run build
+  quality:
+    name: 质量门禁
+    uses: ./.github/workflows/quality.yml
