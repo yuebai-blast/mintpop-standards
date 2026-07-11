@@ -5,7 +5,7 @@ services:
     container_name: mintpop-standards
     restart: unless-stopped
     ports:
-      - "${APP_PORT:-8080}:80"                          # 宿主端口参数化（右侧容器端口固定 80）
+      - "127.0.0.1:${APP_PORT:-8080}:80"                          # 宿主端口参数化（右侧容器端口固定 80）
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1"]
       interval: 30s
